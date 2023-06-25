@@ -1,23 +1,28 @@
 #!/bin/bash
-
+#..................Databadse configuration....................
+#Install and Configure FirewallD
+ echo "Installing firewallD"
  sudo apt-get install -y firewalld
  sudo service firewalld start
  sudo systemctl enable firewalld
-
+#Install and Configure mariaDb
+ echo "Installing mariadb"
  sudo apt-get install -y mariadb-server
  sudo service mariadb start
  sudo systemctl enable mariadb
-
+#Configure firewall for Database
+ echo "adding firewall rules for db"
  sudo firewall-cmd --permanent --zone=public --add-port=3306/tcp
  sudo firewall-cmd --reload
-
+#Configure Database
+ echo "Configure db"
  cat > configure-db.sql <<-EOF
  CREATE DATABASE ecomdb;
  CREATE USER 'ecomuser'@'localhost' IDENTIFIED BY 'ecompassword';
  GRANT ALL PRIVILEGES ON *.* TO 'ecomuser'@'localhost';
  FLUSH PRIVILEGES;
-
 EOF
+
 
  sudo mysql < configure-db.sql
 
